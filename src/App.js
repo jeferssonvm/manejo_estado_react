@@ -1,23 +1,14 @@
 import logo from './logo.svg';
 import './App.css';
+import { ClassState } from './ClassState';
+import { UseState } from './UseState';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {/* 1 Envio de propiedades (props) Se envia de la misma forma, sea el componente creado con clase o función: */}
+      <ClassState name= "Class State"></ClassState>
+      <UseState name="use Stete"></UseState>
     </div>
   );
 }
