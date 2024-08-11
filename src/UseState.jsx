@@ -1,18 +1,28 @@
 import React, { useEffect, useState } from 'react'
 
-
+const SECURITY_CODE = "paradigma";
 function UseState({name}){
 
     // Manejo de estado en funciones Utilizamos la siguiente sintaxis para declarar e inicializarr un estado y su modificador de valor.
+    // Los estados independientes o simples con estados que no dependen uno del otro para funcionar. Solo dependen de una variable con un actualizador del estado:
 
+
+
+    const [value, setValue] = useState("")
     const [ error, setError] = useState(false);
     const [ loading, setLoading] = useState(false)
-
+    console.log(value)
     useEffect(()=>{
         if(!!loading){
             setTimeout(()=>{
                 console.log("haciendo la validacion ")
-                setLoading(false)
+                if(value === SECURITY_CODE){
+                    setLoading(false);
+                    setError(false);
+                }else{
+                    setError(true);
+                    setLoading(false);
+                }
                 console.log("terninado la validacion")
             },3000)
         }
@@ -38,7 +48,12 @@ function UseState({name}){
             {loading && 
                 <p>Cargando ... </p>
                 }
-            <input placeholder='Codigo de seguridad' />
+            <input placeholder='Codigo de seguridad' 
+                value={value}
+                onChange={(event) => {
+                    setValue(event.target.value)
+                }}
+            />
             <button 
                 onClick={()=>setLoading(true)}
             >combrobar</button>
