@@ -1,4 +1,5 @@
 import React from 'react'
+import { Loading } from './Loading';
 
 // export const ClassState = () => {
 //   return (
@@ -23,8 +24,37 @@ class ClassState extends React.Component{
         super(props);
         this.state = {
             error:true,
+            loading: false,
         };
     }
+
+    // UNSAFE_componentWillMount() {
+    //     // ste método se ejecuta justo antes de que el componente se monte en el DOM, pero debido a problemas como la falta de consistencia en su ejecución en diferentes entornos, se desaconseja su uso.
+    //     console.log("UNSAFE_componentWillMount");
+    //   }
+    
+    //   componentDidMount() {
+    //     // es un método de ciclo de vida en React que se ejecuta después de que un componente ha sido montado en el DOM. Es ideal para realizar operaciones como:
+
+    //     // Fetch de datos: Llamar a APIs o cargar datos externos.
+    //     // Suscripciones: Conectar a eventos, websockets, etc.
+    //     // Manipulación del DOM: Acceder a elementos del DOM que ya están renderizados.
+
+    //     console.log("componentDidMount");
+    //   }
+    
+      componentDidUpdate() {
+        // Se llama después de que el componente haya sido actualizado y renderizado en la pantalla. Este método es útil para realizar acciones en respuesta a cambios en las props o el estado del componente.
+        console.log("Update");
+        if(!!this.setState.loading){
+            setTimeout(()=>{
+                console.log("haciendo la validacion ")
+                this.setState({loading: false})
+                console.log("terninado la validacion")
+            },300)
+        }
+      }
+
     render(){
         return(
             <div>
@@ -34,10 +64,13 @@ class ClassState extends React.Component{
                 {this.state.error && (
                     <p> Error: el codigo es incorrecto</p>
                 )}
+                {this.state.loading && (
+                    <Loading></Loading>
+                )}
                 <input placeholder='Codigo de seguridad' />
                 <button
                     onClick={() =>
-                        this.setState(prevState =>({error: !prevState.error}))
+                        this.setState({loading: true})
                     }
                 >combrobar</button>
             </div>
