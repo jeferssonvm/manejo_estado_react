@@ -1,5 +1,6 @@
 import React from 'react'
 import { Loading } from './Loading';
+const SECURITY_CODE = "paradigma";
 
 // export const ClassState = () => {
 //   return (
@@ -23,11 +24,12 @@ class ClassState extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            error:true,
+            value:"",
+            error:false,
             loading: false,
         };
     }
-
+    
     // UNSAFE_componentWillMount() {
     //     // ste método se ejecuta justo antes de que el componente se monte en el DOM, pero debido a problemas como la falta de consistencia en su ejecución en diferentes entornos, se desaconseja su uso.
     //     console.log("UNSAFE_componentWillMount");
@@ -45,33 +47,45 @@ class ClassState extends React.Component{
     
       componentDidUpdate() {
         // Se llama después de que el componente haya sido actualizado y renderizado en la pantalla. Este método es útil para realizar acciones en respuesta a cambios en las props o el estado del componente.
-        console.log("Update");
-        if(!!this.setState.loading){
+        // console.log("Update");
+        // console.log(!!this.setState.loading)
+        if(!!this.state.loading){
+            console.log("!this.setState.loading")
             setTimeout(()=>{
                 console.log("haciendo la validacion ")
-                this.setState({loading: false})
+                if(SECURITY_CODE ===this.state.value){
+                    console.log("entre")
+                    this.setState({error:false, loading:false})
+                }else{
+                    console.log("entre2")
+                    this.setState({error:true, loading:false})
+                }
+                
                 console.log("terninado la validacion")
             },300)
         }
       }
-
     render(){
         return(
             <div>
                 {/* Manejo de propiedades en clases Para el manejo de propiedades escribimos this.props para acceder a las propiedades de nuestro elemento */}
                 <h2> Eliminar {this.props.name}</h2>
                 <p>por favor escribe el codigo de seguridad </p>
-                {this.state.error && (
+                {(this.state.error && !this.state.loading )&& (
                     <p> Error: el codigo es incorrecto</p>
                 )}
                 {this.state.loading && (
                     <Loading></Loading>
                 )}
-                <input placeholder='Codigo de seguridad' />
+                <input placeholder='Codigo de seguridad'
+                value={this.state.value}
+                onChange = {(event)=>{
+                    this.setState({value:event.target.value});
+                }}
+                />
                 <button
-                    onClick={() =>
-                        this.setState({loading: true})
-                    }
+                    onClick={() =>{this.setState({loading:true})
+                console.log(this.setState.loading)}}
                 >combrobar</button>
             </div>
         )
