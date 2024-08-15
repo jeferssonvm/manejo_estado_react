@@ -16,7 +16,9 @@ function UseState({name}){
         value:"",
         error:false,
         loading: false,
-    })
+        deleted:false,
+        confirmed:false,
+    });
     
     useEffect(()=>{
         if(!!state.loading){
@@ -27,6 +29,7 @@ function UseState({name}){
                         ...state,
                         error:false,
                         loading:false,
+                        confirmed:true,
                     })
                 }else{
                     setState({
@@ -47,7 +50,8 @@ function UseState({name}){
 
 
 
-
+if (!state.deleted && !state.confirmed){
+    
     return(
         <div>
                 {/* Manejo de propiedades en funciones Para el manejo de propiedades debemos
@@ -79,5 +83,43 @@ function UseState({name}){
             >combrobar</button>
         </div>
     );
+}else if(!!state.confirmed && !state.deleted ){
+    return(
+        <React.Fragment>
+            <p>estado de confirmacion</p>
+            <button onClick={() =>{setState({
+                ...state,
+                deleted:true
+            })}}>Si Elminiar</button>
+            <button onClick={()=>{
+                setState({
+                    ...state,
+                    confirmed:false
+                })
+            }}>Nop me Arrepenti</button>
+        </React.Fragment>
+    )
+
+}else{
+    // El estado imperativo con useState en React se refiere a cómo los desarrolladores pueden gestionar el estado de los componentes de manera explícita. Usando useState, puedes definir y actualizar el estado de una forma que requiere que especifiques cuándo y cómo se deben cambiar los valores. Esto es "imperativo" porque el desarrollador dicta cada paso del proceso de actualización del estado.
+
+
+    return(
+        <React.Fragment>
+            <p>eliminado con exito</p>
+            <button onClick={()=>{
+                setState({
+                    ...state,
+                    confirmed:false,
+                    deleted:false,
+                    value:""
+                })
+            }}>Resetear ,Volver atras</button>
+        </React.Fragment>
+    )
+}
 }
 export {UseState};
+
+//El estado imperativo en programación se refiere a un enfoque donde el desarrollador dicta explícitamente cada paso para manipular el estado de la aplicación. En lugar de describir lo que se desea (como en un enfoque declarativo), en el estado imperativo se describe cómo lograrlo. Se centra en las operaciones y comandos necesarios para modificar el estado, a menudo utilizando secuencias de instrucciones que deben ejecutarse en un orden específico para alcanzar el resultado deseado.
+
