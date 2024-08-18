@@ -25,18 +25,9 @@ function UseState({name}){
             setTimeout(()=>{
                 console.log("haciendo la validacion ")
                 if(state.value === SECURITY_CODE){
-                    setState({
-                        ...state,
-                        error:false,
-                        loading:false,
-                        confirmed:true,
-                    })
-                }else{
-                    setState({
-                        ...state,
-                        error:true,
-                        loading:false,
-                    })
+                    onConfirmed();
+                }else{  
+                    onError();
                 }
                 console.log("terninado la validacion")
             },3000)
@@ -48,6 +39,49 @@ function UseState({name}){
     // Array con elementos. Los estados que le pasemos al array harán que cuando haya un cambio en ellos se ejecutará la función.
 )
 
+
+const onConfirmed = ()=>{
+    setState({
+        ...state,
+        error:false,
+        loading:false,
+        confirmed:true,
+    });
+}
+const onWrite =(newValue)=>{
+    setState({
+        ...state,
+        value:newValue,
+    });
+}
+const onCheck = () => {
+    setState({
+        ...state,
+        loading:true
+    });
+}
+const onDelete = () =>{
+    setState({
+        ...state,
+        deleted:true,
+    });
+}
+const onError = ()=>{
+    setState({
+        ...state,
+        error:true,
+        loading:false
+        
+    })
+}
+const onReset = () =>{
+    setState({
+        ...state,
+        confirmed:false,
+        deleted:false,
+        value :"",
+    })
+}
 
 
 if (!state.deleted && !state.confirmed){
@@ -68,18 +102,13 @@ if (!state.deleted && !state.confirmed){
                 value={state.value}
                 onChange={(event) => {
                     // setError(false)
-                    setState({
-                        ...state,
-                        value:event.target.value
-                    })
+                    onWrite(event.target.value)
                 }}
             />
             <button 
-                onClick={()=>setState({
-                    ...state,
-                    loading:true,
+                onClick={()=>
+                    onCheck()
                 }
-                )}
             >combrobar</button>
         </div>
     );
@@ -87,10 +116,10 @@ if (!state.deleted && !state.confirmed){
     return(
         <React.Fragment>
             <p>estado de confirmacion</p>
-            <button onClick={() =>{setState({
-                ...state,
-                deleted:true
-            })}}>Si Elminiar</button>
+            <button onClick={() =>{
+                
+              onDelete();
+            }}>Si Elminiar</button>
             <button onClick={()=>{
                 setState({
                     ...state,
@@ -102,7 +131,6 @@ if (!state.deleted && !state.confirmed){
 
 }else{
     // El estado imperativo con useState en React se refiere a cómo los desarrolladores pueden gestionar el estado de los componentes de manera explícita. Usando useState, puedes definir y actualizar el estado de una forma que requiere que especifiques cuándo y cómo se deben cambiar los valores. Esto es "imperativo" porque el desarrollador dicta cada paso del proceso de actualización del estado.
-
 
     return(
         <React.Fragment>
@@ -123,3 +151,13 @@ export {UseState};
 
 //El estado imperativo en programación se refiere a un enfoque donde el desarrollador dicta explícitamente cada paso para manipular el estado de la aplicación. En lugar de describir lo que se desea (como en un enfoque declarativo), en el estado imperativo se describe cómo lograrlo. Se centra en las operaciones y comandos necesarios para modificar el estado, a menudo utilizando secuencias de instrucciones que deben ejecutarse en un orden específico para alcanzar el resultado deseado.
 
+
+
+    
+    
+
+    
+    
+    
+
+    
