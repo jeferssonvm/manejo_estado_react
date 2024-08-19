@@ -189,3 +189,15 @@ export { UseReducer };
 // Object Lookup: Es la forma más estructurada y mantenible, donde las acciones se manejan a través de un objeto que mapea tipos de acción a sus respectivos cambios de estado. Esto facilita la expansión y es más limpio para manejar estados complejos.
 
 // Cada método tiene sus ventajas dependiendo del tamaño y complejidad de la aplicación. En aplicaciones grandes, la tercera forma es preferida por su claridad y facilidad de mantenimiento.
+
+
+// Explicación Detallada:
+// initialState: Define el estado inicial de la aplicación, que contiene varias propiedades como value, error, loading, deleted, y confirmed.
+
+// reducerObject: Es un objeto que mapea los tipos de acción (CONFIRM, ERROR, WRITE, etc.) a los cambios de estado correspondientes. Este enfoque permite agregar fácilmente nuevas acciones o modificar las existentes.
+
+// reducer: Es la función que selecciona la acción adecuada de reducerObject según el tipo de acción recibido. Si la acción existe en el objeto, devuelve el nuevo estado modificado; si no, retorna el estado sin cambios.
+
+// UseReducer: Es el componente principal que maneja el flujo de la UI utilizando useReducer para manejar el estado. Este componente incluye tres estados de UI principales: uno donde se ingresa el código de seguridad, otro para confirmar la eliminación, y el estado final después de la eliminación.
+
+// Este enfoque es modular y escalable, lo que facilita la gestión de estados complejos y la extensión futura del código.
