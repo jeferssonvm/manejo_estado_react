@@ -1,5 +1,6 @@
 import React from 'react';
 
+const SECURITY_CODE = "paradigma";
 // Definición de un componente de clase en React
 class ClassState extends React.Component {
 

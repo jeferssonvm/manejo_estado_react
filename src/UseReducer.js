@@ -1,71 +1,72 @@
-import React, { useEffect, useReducer, useState } from 'react'
+import React, { useEffect, useReducer } from 'react';
 
 const SECURITY_CODE = "paradigma";
 
-function UseReducer({name}) {
-    // Utilizamos useReducer en lugar de useState para manejar el estado complejo.
-    // state: es el estado actual, dispatch: es la función para enviar acciones al reducer.
+function UseReducer({ name }) {
+    // Hook useReducer: Gestiona el estado complejo del componente.
     const [state, dispatch] = useReducer(reducer, initialState);
-    
-    // useEffect se usa para efectos secundarios. Aquí se ejecuta cuando 'loading' cambia.
-    useEffect(() => {
-        console.log("empezando el efecto");
-        if(!!state.loading) { // Verifica si está en estado de carga.
-            setTimeout(() => {
-                console.log("haciendo la validación");
-                // Si el código de seguridad es correcto, disparamos la acción 'CONFIRM'.
-                if(state.value === SECURITY_CODE) {
-                    dispatch({type: 'CONFIRM'});
-                } else {  
-                    // Si no es correcto, disparamos la acción 'ERROR'.
-                    dispatch({type: 'ERROR'});
-                }
-            }, 3000); // Simula un retraso de 3 segundos para la validación.
-        }
-    }, [state.loading]); // El efecto se ejecuta cuando 'loading' cambia.
 
-    // Renderizado de diferentes estados de la UI:
+    // Action Creators: Son funciones que crean acciones, es decir, objetos con un tipo específico.
+    // Estas funciones son invocadas para despachar acciones al reducer.
+    const onConfirmed = () => dispatch({ type: actionTypes.confirm });
+    const onCheck = () => dispatch({ type: actionTypes.check });
+    const onDelete = () => dispatch({ type: actionTypes.delete });
+    const onError = () => dispatch({ type: actionTypes.error });
+    const onReset = () => dispatch({ type: actionTypes.reset });
+
+    // Action Creator para manejar la escritura en el input.
+    const onWrite = ({ target: { value } }) => {
+        dispatch({ type: actionTypes.write, payload: value });
+    };
+
+    // Efecto secundario: Se activa cuando 'loading' cambia.
+    useEffect(() => {
+        if (state.loading) {
+            setTimeout(() => {
+                if (state.value === SECURITY_CODE) {
+                    onConfirmed();  // Acción confirmada.
+                } else {
+                    onError();  // Acción error.
+                }
+            }, 3000);
+        }
+    }, [state.loading]);
+
+    // Renderizado de UI en función del estado.
     if (!state.deleted && !state.confirmed) {
-        // Estado inicial, antes de la confirmación o eliminación.
         return (
             <div>
                 <h2>Eliminar {name}</h2>
                 <p>Por favor escribe el código de seguridad</p>
-                {/* Muestra un mensaje de error si el código es incorrecto */}
                 {(state.error && !state.loading) && (<p>Error: El código es incorrecto</p>)}
-                {/* Muestra un mensaje de carga mientras se valida */}
                 {state.loading && <p>Cargando ...</p>}
-                {/* Input para el código de seguridad, actualiza el estado con la acción 'WRITE' */}
-                <input 
-                    placeholder='Código de seguridad' 
+                <input
+                    placeholder='Código de seguridad'
                     value={state.value}
-                    onChange={(event) => dispatch({type: 'WRITE', payload: event.target.value})}
+                    onChange={onWrite} // Usa el Action Creator onWrite.
                 />
-                {/* Botón para comprobar el código, dispara la acción 'CHECK' */}
-                <button onClick={() => dispatch({type: 'CHECK'})}>
+                <button onClick={onCheck}>
                     Comprobar
                 </button>
             </div>
         );
-    } else if (!!state.confirmed && !state.deleted) {
-        // Estado después de la confirmación pero antes de la eliminación.
+    } else if (state.confirmed && !state.deleted) {
         return (
             <React.Fragment>
                 <p>¿Estás seguro de eliminar?</p>
-                <button onClick={() => dispatch({type: 'DELETE'})}>
+                <button onClick={onDelete}>
                     Sí, eliminar
                 </button>
-                <button onClick={() => dispatch({type: 'RESET'})}>
+                <button onClick={onReset}>
                     No, me arrepentí
                 </button>
             </React.Fragment>
         );
     } else {
-        // Estado final, después de la eliminación.
         return (
             <React.Fragment>
                 <p>Eliminado con éxito</p>
-                <button onClick={() => dispatch({type: 'RESET'})}>
+                <button onClick={onReset}>
                     Resetear, volver atrás
                 </button>
             </React.Fragment>
@@ -73,58 +74,60 @@ function UseReducer({name}) {
     }
 }
 
-// Estado inicial que define la estructura básica de nuestro estado global.
+// Estado inicial: Define la estructura básica del estado.
 const initialState = {
     value: '',
     error: false,
     loading: false,
-    delete: false,
+    deleted: false,
     confirmed: false,
 };
 
-// Definimos las acciones y cómo afectan al estado dentro de un objeto.
-const reducerObject = (state, payload) => ({
-    'CONFIRM': {
-        ...state,
-        error: false,
-        loading: false,
-        confirmed: true,
-    },
-    'ERROR': {
-        ...state,
-        error: true,
-        loading: false,
-    },
-    'WRITE': {
-        ...state,
-        value: payload, // payload es el nuevo valor del input.
-    },
-    'CHECK': {
-        ...state,
-        loading: true, // Activa el estado de carga.
-    },
-    'DELETE': {
-        ...state,
-        deleted: true, // Marca el estado como eliminado.
-    },
-    'RESET': {
-        ...state,
-        confirmed: false,
-        deleted: false,
-        value: '', // Reinicia el estado a sus valores iniciales.
-    },
-});
+// actionTypes: Objeto que define los tipos de acciones posibles en el reducer.
+// Ayuda a evitar errores de tipografía y facilita la gestión de las acciones.
+const actionTypes = {
+    confirm: 'CONFIRM',
+    error: 'ERROR',
+    delete: 'DELETE',
+    write: 'WRITE',
+    reset: 'RESET', // Corrigido 'reste' a 'reset'.
+    check: 'CHECK',
+};
 
-// Reducer que selecciona la acción adecuada del objeto reducerObject según el tipo.
+// reducer: Función pura que gestiona cómo cambia el estado en función de las acciones recibidas.
+// El switch se encarga de ejecutar el código específico para cada tipo de acción.
 const reducer = (state, action) => {
-    if (reducerObject(state, action.payload)[action.type]) {
-        return reducerObject(state, action.payload)[action.type];
-    } else {
-        return state;
+    switch (action.type) {
+        case actionTypes.confirm:
+            return { ...state, error: false, loading: false, confirmed: true };
+        case actionTypes.error:
+            return { ...state, error: true, loading: false };
+        case actionTypes.write:
+            return { ...state, value: action.payload };
+        case actionTypes.check:
+            return { ...state, loading: true };
+        case actionTypes.delete:
+            return { ...state, deleted: true };
+        case actionTypes.reset:
+            return { ...initialState };  // Reinicia el estado al inicial.
+        default:
+            return state;
     }
 };
 
 export { UseReducer };
+
+// Explicación detallada:
+
+// Action Creators: Son funciones que devuelven un objeto con una propiedad type. Este tipo se utiliza en el reducer para identificar qué lógica ejecutar en base a la acción disparada.
+
+// Action Types: Es un objeto que centraliza todos los tipos de acciones posibles en el reducer. Al usar constantes definidas, se reduce el riesgo de errores tipográficos y facilita la gestión de acciones, especialmente en aplicaciones más grandes.
+
+
+
+
+
+
 
 
 
