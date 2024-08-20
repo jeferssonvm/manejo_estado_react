@@ -33,39 +33,94 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 **Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+# Curso de React.js: Manejo Profesional del Estado
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Este repositorio contiene apuntes y ejemplos clave sobre el manejo del estado en React. A lo largo del curso, aprenderemos a gestionar el estado de manera efectiva utilizando tanto clases como funciones.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Contenidos
 
-## Learn More
+### 1. Estados simples: React.Component vs. useState
+Exploramos cómo manejar estados simples en componentes de clase con `this.state` y en componentes funcionales con `useState`, comparando las ventajas y desventajas de cada enfoque.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### 2. Efectos con useEffect
+Uso del hook `useEffect` para manejar efectos secundarios en componentes funcionales, como suscripciones, temporizadores, y más. Se compara con los métodos de ciclo de vida de los componentes de clase.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### 3. Métodos del ciclo de vida en React.Component
+Explicación detallada de los métodos del ciclo de vida (`componentDidMount`, `componentDidUpdate`, `componentWillUnmount`) y cómo se utilizan en componentes de clase para controlar el comportamiento y la actualización del componente.
 
-### Code Splitting
+### 4. Estados independientes con useState
+Aprendemos a manejar múltiples estados independientes dentro de un mismo componente utilizando varios hooks `useState`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### 5. Estados compuestos con React.Component
+Cómo gestionar objetos de estado que contienen múltiples propiedades en componentes de clase, usando `this.setState` para actualizar estados complejos sin perder información.
 
-### Analyzing the Bundle Size
+### 6. Estados compuestos con useState
+Manejo de estados complejos o compuestos en componentes funcionales utilizando el hook `useState`. Se destaca la importancia de copiar el estado anterior al realizar actualizaciones.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### 7. Estados semideclarativos con useState
+Creación de estados derivados o calculados que dependen de otros estados, utilizando funciones dentro de `useState`.
 
-### Making a Progressive Web App
+### 8. ¿Qué es un reducer?
+Un `reducer` es una función pura que toma el estado anterior y una acción, y devuelve un nuevo estado. Es útil para manejar estados complejos y centralizar la lógica de actualización.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```js
+const reducer = (state, action) => {
+    if (reducerObject(state, action.payload)[action.type]) {
+        return reducerObject(state, action.payload)[action.type];
+    } else {
+        return state;
+    }
+};
+9. 3 formas de crear un reducer
+Se presentan tres métodos para crear un reducer: utilizando condicionales if-else, switch-case, y a través de objetos que asocian acciones con estados.
 
-### Advanced Configuration
+js
+Copiar código
+// Condicionales if-else
+const reducers = (state, action) => {
+    if (action.type === "ERROR") {
+        return {
+            ...state,
+            error: true,
+            loading: false,
+        };
+    } else if (action.type === 'CHECK') {
+        return {
+            ...state,
+            loading: true,
+        };
+    } else {
+        return {
+            ...state,
+        };
+    }
+};
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+// Switch-Case
+const reduceSwitch = (state, action) => {
+    switch (action.type) {
+        case 'ERROR':
+            return {
+                ...state,
+                error: true,
+                loading: false,
+            };
+        case 'CHECK':
+            return {
+                ...state,
+                loading: true,
+            };
+        default:
+            return {
+                ...state,
+            };
+    }
+};
+10. Estados declarativos con useReducer
+Uso del hook useReducer para manejar estados de forma más declarativa y estructurada, especialmente en aplicaciones con lógica de estado compleja.
 
-### Deployment
+11. Action creators y actionTypes
+Separación de la lógica y las acciones mediante la creación de "action creators" y constantes para los "action types", lo que mejora la escalabilidad y reduce errores.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-sss
+12. ¿Qué son los estados derivados?
+Estados calculados automáticamente a partir de otros estados "normales", que se actualizan automáticamente cuando cambia el estado base.
